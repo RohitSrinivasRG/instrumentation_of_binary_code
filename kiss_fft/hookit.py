@@ -54,7 +54,6 @@ def new_cfs(cfs_type, cfs_instr, cfs_src, cfs_dst):
 
 def read_config(pathname):
     parser = configparser.ConfigParser(defaults=CONFIG_DEFAULTS)  # Use defaults correctly
-    print(pathname)
     parser.read(pathname)
 
     config = {}
@@ -81,9 +80,7 @@ def read_config(pathname):
 
 def main():
     parser = argparse.ArgumentParser(description='ARMv7 Branch Target Rewriting Tool')
- 
-    # print(parser)
-   
+    
     # Define arguments
     parser.add_argument('-c', '--config', dest='config', default=None, help='Configuration file')
 
@@ -149,7 +146,7 @@ def main():
     elif args.verbose == 2:
         logging.basicConfig(format='%(message)s',level=logging.INFO)
     elif args.verbose >= 3:
-        logging.basicConfig(format='%(message)s',level=logging.DEBUG)
+        logging.basicConfig(filename="hookit.log",format='%(message)s',level=logging.DEBUG)
 
     try:
         config = read_config(args.config if args.config is not None
@@ -252,12 +249,11 @@ def get_loops(control_flow_statements):
 def hookit(opts):
     control_flow_statements = []
 
-    md = Cs(CS_ARCH_ARM64, CS_MODE_LITTLE_ENDIAN)
+    md = Cs(CS_ARCH_ARM, CS_MODE_ARM + sum(opts.cs_mode_flags))
     md.detail = True
 
     with open(opts.binfile, "r+b") as f:
         mm = mmap.mmap(f.fileno(), 0, prot=mmap.PROT_READ | mmap.PROT_WRITE)
-
         offset = opts.text_start - opts.load_address
         logging.debug("hooking %s from 0x%08x to 0x%08x" % 
                       (opts.binfile, offset, opts.text_end - opts.load_address))
