@@ -1,1 +1,0 @@
-ArgumentParser(prog='hookit.py', usage=None, description='ARMv7 Branch Target Rewriting Tool', formatter_class=<class 'argparse.HelpFormatter'>, conflict_handler='error', add_help=True)
