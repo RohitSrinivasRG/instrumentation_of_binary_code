@@ -238,7 +238,7 @@ def main():
                 get_loops(control_flow_statements))
 
 def get_branches(control_flow_statements):
-     return [c for c in control_flow_statements if c.type == CFS.b or c.type == CFS.bl]
+    return [c for c in control_flow_statements if c.type == CFS.b or c.type == CFS.bl]
 
 def get_loops(control_flow_statements):
     branches = [c for c in control_flow_statements if (c.type == CFS.b and c.dst < c.src)]
@@ -301,10 +301,10 @@ def hookit(opts):
                 rewrite_branch(mm, control_flow_statements, opts.load_address, i, opts.hook_b, md, opts.dry_run)
             elif i.mnemonic == "bl":
                 rewrite_branch_with_link(mm, control_flow_statements, opts.load_address, i, opts.hook_bl, md, opts.dry_run)
-            elif i.mnemonic == "br" and len(i.operands) == 1:
-                rewrite_branch_register(mm, control_flow_statements, opts.load_address, i, opts.hook_br, md, opts.dry_run)
-            elif i.mnemonic == "blr" and len(i.operands) == 1:
-                rewrite_branch_link_register(mm, control_flow_statements, opts.load_address, i, opts.hook_blr, md, opts.dry_run)
+            # elif i.mnemonic == "br" and len(i.operands) == 1:
+            #     rewrite_branch_register(mm, control_flow_statements, opts.load_address, i, opts.hook_br, md, opts.dry_run)
+            # elif i.mnemonic == "blr" and len(i.operands) == 1:
+            #     rewrite_branch_link_register(mm, control_flow_statements, opts.load_address, i, opts.hook_blr, md, opts.dry_run)
             else:
                 logging.debug("      0x%08x: %-10s\t%s\t%s" %
                               (i.address, hexbytes(i.bytes), i.mnemonic, i.op_str))
@@ -312,7 +312,8 @@ def hookit(opts):
             # Stop if we exceed the text section
             if i.address >= opts.text_end:
                 break
-
+            
+            # print(control_flow_statements)
             # Advance to next instruction (trust Capstone instruction size)
             current_address += i.size
 
